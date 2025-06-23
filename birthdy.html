@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise for Ayesha</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            color: #5a2d82;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff6b8b, #ff8e53);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Hearts animation */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff4d6d;
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: float 6s linear infinite;
+            z-index: -1;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff4d6d;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: rotate(45deg) translateY(0);
+            }
+
+            100% {
+                transform: rotate(45deg) translateY(-100vh);
+            }
+        }
+
+        /* Balloons */
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            border-radius: 50%;
+            bottom: -60px;
+            animation: balloon-float 8s ease-in forwards;
+            z-index: -1;
+        }
+
+        .balloon:before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            top: 60px;
+            left: 24px;
+        }
+
+        @keyframes balloon-float {
+            to {
+                transform: translateY(-120vh);
+            }
+        }
+
+        /* Cake */
+        .cake {
+            width: 150px;
+            height: 100px;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .cake-top {
+            width: 150px;
+            height: 40px;
+            background: #f8c8dc;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .cake-middle {
+            width: 140px;
+            height: 50px;
+            background: #e7a7ca;
+            position: absolute;
+            top: 30px;
+            left: 5px;
+            border-radius: 5px;
+        }
+
+        .cake-bottom {
+            width: 150px;
+            height: 40px;
+            background: #d48fb8;
+            position: absolute;
+            top: 70px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .candle {
+            width: 10px;
+            height: 30px;
+            background: #fff;
+            position: absolute;
+            top: -30px;
+            left: 70px;
+        }
+
+        .flame {
+            width: 12px;
+            height: 20px;
+            background: #ff8a00;
+            position: absolute;
+            top: -50px;
+            left: 69px;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 10px #ff8a00;
+            animation: flicker 0.5s alternate infinite;
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s linear forwards;
+            opacity: 0;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 1;
+            }
+        }
+
+        /* Message */
+        #message {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 200px;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Screen 1 -->
+    <div class="screen active" id="screen1">
+        <h1>I have something for you 💌</h1>
+        <button class="btn" onclick="nextScreen(2)">Click Here</button>
+        <div id="hearts1"></div>
+    </div>
+
+    <!-- Screen 2 -->
+    <div class="screen" id="screen2">
+        <h1>It's a special day for me 💋💞🫂</h1>
+        <div style="font-size: 4rem; margin: 20px;">🎁</div>
+        <button class="btn" onclick="nextScreen(3)">Next</button>
+        <div id="hearts2"></div>
+    </div>
+
+    <!-- Screen 3 -->
+    <div class="screen" id="screen3">
+        <h1>Happy Birthday <span style="color:#d23669;">Meri piyari jan Ayesha (Tidhi)</span></h1>
+        <button class="btn" onclick="startCelebration()">Let's Celebrate</button>
+        <div id="hearts3"></div>
+    </div>
+
+    <!-- Screen 4 -->
+    <div class="screen" id="screen4">
+        <h1>Let's cut the cake 🎂</h1>
+        <div class="cake">
+            <div class="cake-top"></div>
+            <div class="cake-middle"></div>
+            <div class="cake-bottom"></div>
+            <div class="candle"></div>
+            <div class="flame"></div>
+        </div>
+        <button class="btn hidden" id="cutCakeBtn" onclick="cutCake()">Cut Cake</button>
+        <div id="hearts4"></div>
+    </div>
+
+    <!-- Screen 5 -->
+    <div class="screen" id="screen5">
+        <h1>For You My Love...</h1>
+        <div id="message"></div>
+        <div id="hearts5"></div>
+    </div>
+
+    <script>
+        // Screen navigation
+        let currentScreen = 1;
+
+        function nextScreen(screenNum) {
+            document.getElementById(`screen${currentScreen}`).classList.remove('active');
+            currentScreen = screenNum;
+            document.getElementById(`screen${currentScreen}`).classList.add('active');
+
+            // Create hearts for screens that need them
+            if (currentScreen === 3) {
+                createHearts('hearts3');
+            } else if (currentScreen === 4) {
+                setTimeout(() => {
+                    document.getElementById('cutCakeBtn').classList.remove('hidden');
+                }, 5000);
+            }
+        }
+
+        // Create floating hearts
+        function createHearts(containerId) {
+            const colors = ['#ff4d6d', '#ff758f', '#ff8fab', '#ffb3c1', '#ffccd5'];
+            const container = document.getElementById(containerId);
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = 3 + Math.random() * 3 + 's';
+                    heart.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    container.appendChild(heart);
+
+                    // Remove hearts after animation completes
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 6000);
+                }, i * 300);
+            }
+        }
+
+        // Celebration with balloons and fireworks
+        function startCelebration() {
+            const colors = ['#ff6b6b', '#4cc9f0', '#6a4c93', '#f72585', '#7209b7', '#3a86ff', '#ff006e'];
+
+            // Launch balloons
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.left = Math.random() * 100 + 'vw';
+                    balloon.style.animationDuration = 5 + Math.random() * 3 + 's';
+                    balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(balloon);
+
+                    // Remove balloons after they float away
+                    setTimeout(() => {
+                        balloon.remove();
+                    }, 10000);
+                }, i * 300);
+            }
+
+            // Move to cake screen after celebration
+            setTimeout(() => {
+                nextScreen(4);
+            }, 5000);
+        }
+
+        // Cake cutting with confetti
+        function cutCake() {
+            const colors = ['#ff6b6b', '#4cc9f0', '#6a4c93', '#f72585', '#7209b7', '#3a86ff', '#ff006e'];
+
+            // Create confetti
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.animationDuration = 1 + Math.random() * 2 + 's';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(confetti);
+
+                    // Remove confetti after it falls
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 30);
+            }
+
+            // Show message after confetti
+            setTimeout(() => {
+                showMessage();
+            }, 1000);
+        }
+
+        // Typing animation for message
+        function showMessage() {
+            const message = "Today isn't just your birthday — it's the day the most beautiful soul was born.\nYou are my peace, my smile, my world.\nI love you forever. — Your Mamoon 💖";
+            const messageDiv = document.getElementById('message');
+            let i = 0;
+
+            nextScreen(5);
+
+            const typing = setInterval(() => {
+                if (i < message.length) {
+                    messageDiv.innerHTML += message.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typing);
+                }
+            }, 50);
+        }
+
+        // Initialize hearts for first screen
+        createHearts('hearts1');
+    </script>
+</body>
+
+</html>
